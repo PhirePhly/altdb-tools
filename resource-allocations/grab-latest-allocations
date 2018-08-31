@@ -1,0 +1,37 @@
+#/bin/bash
+#
+# Kenneth Finnegan, 2018
+#
+# This script grabs the latest delegated-RIR-extended from all five RIRs
+# and combines them into a single full database for use elsewhere.
+
+WWW_BASE_DIR="/var/www/tools/data/resource-allocations"
+
+TMPDIR=`mktemp -d`
+BASEDB="delegated-all-normalized"
+NEWDB="$BASEDB-`date '+%Y%m%d'`"
+YEARDIR="`date '+%Y'`"
+
+# For each of the RIR databases...
+echo "ftp://ftp.afrinic.net/stats/afrinic/delegated-afrinic-extended-latest
+ftp://ftp.apnic.net/pub/apnic/stats/apnic/delegated-apnic-extended-latest
+ftp://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest
+ftp://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest
+ftp://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest" |
+while read RIR_URL; do
+	# Fetch their delegation latest file
+	wget -q -O - "$RIR_URL" |
+	# Strip off the comments at the beginning
+	grep -v "^#" |
+	# Strip off the version header
+	tail -n +2 |
+	# Strip off the summary lines per record
+	grep -v "|summary$" |
+	# Normalize ASN entries so every ASN has its own entry
+	normalize-asn-records >>$TMPDIR/$NEWDB
+done
+
+mkdir -p $WWW_BASE_DIR/$YEARDIR
+cp $TMPDIR/$NEWDB $WWW_BASE_DIR/$YEARDIR/$NEWDB
+ln -s $WWW_BASE_DIR/$YEARDIR/$NEWDB $WWW_BASE_DIR/$BASEDB
+

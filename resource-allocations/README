@@ -1,0 +1,21 @@
+Extended and Normalized Resource Statistics from All RIRs
+
+This collection of daily snapshots are taken from the five RIRs
+(AFRINIC, APNIC, ARIN, LACNIC, RIPE) and combined into one file to
+aid others with analysis relating to resource allocations on the Internet.
+
+The format presented is slightly different from that defined by IANA:
+  1. There is no header or summary lines. All lines are resource records
+  2. ASN entries have been uncompressed (normalized) from if sequential
+     records are identical.
+
+This second feature is meant to make it particularly easier for basic
+checks like grepping for an ASN to see its current status. If it has been
+allocated from IANA to one of the RIRs, it will now be in this database,
+where before it was possible that it was represented by a lower ASN with
+a count of more than one.
+
+For a useful breakdown on the meaning of each field, see ARIN's annoucement
+of the new format:
+https://www.arin.net/knowledge/statistics/nro_extended_stats_format.pdf
+
