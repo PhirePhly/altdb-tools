@@ -5,7 +5,7 @@
 # This script grabs the latest delegated-RIR-extended from all five RIRs
 # and combines them into a single full database for use elsewhere.
 
-WWW_BASE_DIR="/var/www/tools/data/resource-allocations"
+WWW_BASE_DIR="/var/www/tools.altdb.net/data/resource-allocations"
 
 TMPDIR=`mktemp -d`
 BASEDB="delegated-all-normalized"
